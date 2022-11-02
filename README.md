@@ -33,3 +33,25 @@ python rename.py
 文件中每一行为： class xmin ymin xmax ymax
 
 其中class包含 car pedestrian bicycle moveable_object 四类
+
+## 2. 3D detections
+
+### (1) 3D txt文件获取
+```
+python rename.py
+```
+
+文件保存在 ./new/3d_detection/VoxelNet/train/ 路径下
+
+每一行为 class x y z w l h yaw score
+
+### （2）3D txt文件类别重命名
+
+```
+python change_clss.py
+```
+文件保存在 ./new/3d_detection/VoxelNet/new/ 路径下
+
+每一行为 class x y z w l h yaw score
+
+其中class包含 car pedestrian bicycle moveable_object 四类
