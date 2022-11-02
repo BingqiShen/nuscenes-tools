@@ -31,3 +31,5 @@ python rename.py
 重命名后的所有文件保存在 ./new/2d_label/labels/CAM_FRONT/ 路径下
 
 文件中每一行为： class xmin ymin xmax ymax
+
+其中class包含 car pedestrian bicycle moveable_object 四类
