@@ -18,7 +18,7 @@ python label_parser.py -dt nuscenes
 详情可参考 https://blog.csdn.net/qq_34972053/article/details/111315493
 
 
-### （2）将2D txt文件重命名
+### （2） 将2D txt文件重命名
 
 将./nuScenes_2d_tools/2D_label_parser/target_labels/CAM_FRONT/文件夹复制到 ./raw/2d_label/labels/CAM_FRONT/ 下
 
@@ -45,7 +45,7 @@ python rename.py
 
 每一行为 class x y z w l h yaw score
 
-### （2）3D txt文件类别重命名
+### （2） 3D txt文件类别重命名
 
 ```
 python change_clss.py
@@ -55,3 +55,18 @@ python change_clss.py
 每一行为 class x y z w l h yaw score
 
 其中class包含 car pedestrian bicycle moveable_object 四类
+
+### (3) 3D detection评估
+
+```
+python select_from_json.py
+```
+
+生成mini-VoxelNet.json文件
+
+而后
+
+```
+cd nuScenes_2d_tools/nuscenes-devkit/python-sdk/nuscenes/eval/detection/
+python evaluate.py --version v1.0-mini --result_path /home/thinking/detection_ws/dataset/nuScenes/mini-VoxelNet.json
+```
