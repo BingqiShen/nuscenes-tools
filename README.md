@@ -36,7 +36,14 @@ python rename.py
 
 ## 2. 3D detections
 
-### (1) 3D txt文件获取
+### (1) 将3D json文件 转换为 3D txt文件
+
+```
+cd raw/3d_detection/VoxelNet
+python json2txt.py
+```
+
+### (2) 3D txt文件获取
 ```
 python rename.py
 ```
@@ -45,7 +52,7 @@ python rename.py
 
 每一行为 class x y z w l h yaw score
 
-### （2） 3D txt文件类别重命名
+### (3) 3D txt文件类别重命名
 
 ```
 python change_clss.py
@@ -56,7 +63,7 @@ python change_clss.py
 
 其中class包含 car pedestrian bicycle moveable_object 四类
 
-### (3) 3D detection评估
+### (4) 3D detection评估
 
 ```
 python select_from_json.py
