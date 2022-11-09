@@ -52,6 +52,8 @@ python rename.py
 
 每一行为 class x y z w l h yaw score
 
+最后一行为对应的 3D token
+
 ### (3) 3D txt文件类别重命名
 
 ```
@@ -62,6 +64,8 @@ python change_clss.py
 每一行为 class x y z w l h yaw score
 
 其中class包含 car pedestrian bicycle moveable_object 四类
+
+最后一行为对应的 3D token
 
 ### (4) 3D detection评估
 

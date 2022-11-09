@@ -29,7 +29,8 @@ for i in range(len(filenames)):
     content_3d = [line.strip().split(' ') for line in content_3d]
 
     new_content = ''
-    for j in range(len(content_3d)):
+    # 最后一行是token
+    for j in range(len(content_3d)-1):
         if content_3d[j][0] in car_list:
             content_3d[j][0] = 'car'
         elif content_3d[j][0] in pedestrian_list:
@@ -45,6 +46,9 @@ for i in range(len(filenames)):
             new_content = new_content + str(content_3d[j][k]) + ' '
         
         new_content = new_content + '\n'
+    
+    # 把最后一行token加上
+    new_content = new_content + str(content_3d[-1][0])
 
     _3d_file = open('new/3d_detection/VoxelNet/new/{}.txt'.format(filenames[i][:-4]), 'w')
     _3d_file.write(new_content)

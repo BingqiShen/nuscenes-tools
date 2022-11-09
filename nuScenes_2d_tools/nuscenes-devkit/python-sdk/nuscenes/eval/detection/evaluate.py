@@ -278,7 +278,7 @@ if __name__ == "__main__":
                              'If no path given, the CVPR 2019 configuration will be used.')
     parser.add_argument('--plot_examples', type=int, default=0,
                         help='How many example visualizations to write to disk.')
-    parser.add_argument('--render_curves', type=int, default=0,
+    parser.add_argument('--render_curves', type=int, default=1,
                         help='Whether to render PR and TP curves to disk.')
     parser.add_argument('--verbose', type=int, default=1,
                         help='Whether to print to stdout.')

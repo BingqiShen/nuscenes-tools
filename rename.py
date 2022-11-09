@@ -146,7 +146,7 @@ for i in range(len(filenames)):
 
     # 5. 写入标定txt
     calib_file = open('new/calib/{}.txt'.format(i), 'w')
-    calib_file.write(str(cam_intrinsic) + '\n' + str(T_lidar2cam.tolist()))
+    calib_file.write(str(cam_intrinsic) + '\n' + str(T_lidar2cam.tolist()) + '\n' + str(T_cam.tolist()) + '\n' + str(T_lidar.tolist()))
     calib_file.close()
 
     # 6. 重新写入3d txt
@@ -178,6 +178,9 @@ for i in range(len(filenames)):
         line = line[0] + ' ' + str(t_obj2lidar.tolist()) + ' ' + str([float(line[8]), float(line[9]), float(line[10])]) + ' ' + str(yaw_obj2lidar) + ' ' + str(line[13]) + '\n'
 
         content_3d = content_3d + line
+
+    # 最后一行加3d token
+    content_3d = content_3d + _3d_token
 
     _3d_file = open('new/3d_detection/VoxelNet/train/{}.txt'.format(i), 'w')
     _3d_file.write(content_3d)
