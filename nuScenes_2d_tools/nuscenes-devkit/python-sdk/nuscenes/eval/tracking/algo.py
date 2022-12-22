@@ -107,6 +107,20 @@ class TrackingEvaluation(object):
         for scene_tracks_gt in self.tracks_gt.values():
             for frame_gt in scene_tracks_gt.values():
                 for box in frame_gt:
+                    
+                    # add by sbq
+                    if box.tracking_name in ['car', 'bus', 'truck', 'construction_vehicle', 'trailer', 'emergency']:
+                        box.tracking_name = 'car'
+                    elif box.tracking_name in ['pedestrian']:
+                        box.tracking_name = 'pedestrian'
+                    elif box.tracking_name in ['bicycle', 'motorcycle']:
+                        box.tracking_name = 'bicycle'
+                    elif box.tracking_name in ['traffic_cone']:
+                        box.tracking_name = 'traffic_cone'
+                    elif box.tracking_name in ['barrier', 'debris']:
+                        box.tracking_name = 'barrier'
+
+
                     if box.tracking_name == self.class_name:
                         gt_box_count += 1
                         gt_track_ids.add(box.tracking_id)
@@ -242,6 +256,34 @@ class TrackingEvaluation(object):
                 # Select only the current class.
                 frame_gt = scene_tracks_gt[timestamp]
                 frame_pred = scene_tracks_pred[timestamp]
+
+                # add by sbq
+                for f in frame_gt:
+                    if f.tracking_name in ['car', 'bus', 'truck', 'construction_vehicle', 'trailer', 'emergency']:
+                        f.tracking_name = 'car'
+                    elif f.tracking_name in ['pedestrian']:
+                        f.tracking_name = 'pedestrian'
+                    elif f.tracking_name in ['bicycle', 'motorcycle']:
+                        f.tracking_name = 'bicycle'
+                    elif f.tracking_name in ['traffic_cone']:
+                        f.tracking_name = 'traffic_cone'
+                    elif f.tracking_name in ['barrier', 'debris']:
+                        f.tracking_name = 'barrier'
+
+
+                for f in frame_pred:
+                    if f.tracking_name in ['car', 'bus', 'truck', 'construction_vehicle', 'trailer', 'emergency']:
+                        f.tracking_name = 'car'
+                    elif f.tracking_name in ['pedestrian']:
+                        f.tracking_name = 'pedestrian'
+                    elif f.tracking_name in ['bicycle', 'motorcycle']:
+                        f.tracking_name = 'bicycle'
+                    elif f.tracking_name in ['traffic_cone']:
+                        f.tracking_name = 'traffic_cone'
+                    elif f.tracking_name in ['barrier', 'debris']:
+                        f.tracking_name = 'barrier'
+
+
                 frame_gt = [f for f in frame_gt if f.tracking_name == self.class_name]
                 frame_pred = [f for f in frame_pred if f.tracking_name == self.class_name]
 

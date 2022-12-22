@@ -39,8 +39,11 @@ def accumulate(gt_boxes: EvalBoxes,
             gt_box.detection_name = 'pedestrian'
         elif gt_box.detection_name in ['bicycle', 'motorcycle']:
             gt_box.detection_name = 'bicycle'
-        elif gt_box.detection_name in ['traffic_cone', 'barrier', 'moveable_object', 'movable_object']:
+        elif gt_box.detection_name in ['traffic_cone', 'movable_object']:
             gt_box.detection_name = 'traffic_cone'
+        elif gt_box.detection_name in ['barrier', 'debris']:
+            gt_box.detection_name = 'barrier'
+
     
     # Count the positives.
     npos = len([1 for gt_box in gt_boxes.all if gt_box.detection_name == class_name])
@@ -60,8 +63,11 @@ def accumulate(gt_boxes: EvalBoxes,
             box.detection_name = 'pedestrian'
         elif box.detection_name in ['bicycle', 'motorcycle']:
             box.detection_name = 'bicycle'
-        elif box.detection_name in ['traffic_cone', 'barrier', 'moveable_object', 'movable_object']:
+        elif box.detection_name in ['traffic_cone', 'movable_object']:
             box.detection_name = 'traffic_cone'
+        elif box.detection_name in ['barrier', 'debris']:
+            box.detection_name = 'barrier'
+
 
     # Organize the predictions in a single list.
     pred_boxes_list = [box for box in pred_boxes.all if box.detection_name == class_name]

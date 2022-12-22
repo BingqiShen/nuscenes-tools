@@ -95,6 +95,10 @@ def scale_iou(sample_annotation: EvalBox, sample_result: EvalBox) -> float:
     # Validate inputs.
     sa_size = np.array(sample_annotation.size)
     sr_size = np.array(sample_result.size)
+
+    if not all(sr_size > 0):
+        print(sr_size)
+        
     assert all(sa_size > 0), 'Error: sample_annotation sizes must be >0.'
     assert all(sr_size > 0), 'Error: sample_result sizes must be >0.'
 

@@ -1,6 +1,7 @@
 # nuScenes dev-kit.
 # Code written by Oscar Beijbom and Varun Bankiti, 2019.
 
+# revise by sbq
 DETECTION_NAMES = ['car', 'truck', 'bus', 'trailer', 'construction_vehicle', 'pedestrian', 'motorcycle', 'bicycle',
                    'traffic_cone', 'barrier']
 
@@ -38,7 +39,9 @@ PRETTY_ATTRIBUTE_NAMES = {'pedestrian.moving': 'Ped. Moving',
                           'vehicle.parked': 'Veh. Parked',
                           'vehicle.stopped': 'Veh. Stopped'}
 
-TP_METRICS = ['trans_err', 'scale_err', 'orient_err', 'vel_err', 'attr_err']
+# revise by sbq
+# TP_METRICS = ['trans_err', 'scale_err', 'orient_err', 'vel_err', 'attr_err']
+TP_METRICS = ['trans_err', 'scale_err', 'orient_err']
 
 PRETTY_TP_METRICS = {'trans_err': 'Trans.', 'scale_err': 'Scale', 'orient_err': 'Orient.', 'vel_err': 'Vel.',
                      'attr_err': 'Attr.'}

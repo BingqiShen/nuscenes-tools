@@ -96,13 +96,14 @@ def load_gt(nusc: NuScenes, eval_split: str, box_cls, verbose: bool = True) -> E
             'Error: You are trying to evaluate on the test set but you do not have the annotations!'
 
     
-
+    # frame_tokens
     sample_tokens = []
     for sample_token in sample_tokens_all:
         scene_token = nusc.get('sample', sample_token)['scene_token']
         scene_record = nusc.get('scene', scene_token)
         if scene_record['name'] in splits[eval_split]:
             sample_tokens.append(sample_token)
+    
 
     all_annotations = EvalBoxes()
 
@@ -121,6 +122,7 @@ def load_gt(nusc: NuScenes, eval_split: str, box_cls, verbose: bool = True) -> E
                 # Get label name in detection task and filter unused labels.
                 detection_name = category_to_detection_name(sample_annotation['category_name'])
                 if detection_name is None:
+                    # print(sample_annotation)
                     continue
 
                 # Get attribute_name.
@@ -239,8 +241,10 @@ def filter_eval_boxes(nusc: NuScenes,
 
         # Perform bike-rack filtering.
         sample_anns = nusc.get('sample', sample_token)['anns']
+        # bikerack_recs = [nusc.get('sample_annotation', ann) for ann in sample_anns if
+        #                  nusc.get('sample_annotation', ann)['category_name'] == 'static_object.bicycle_rack']
         bikerack_recs = [nusc.get('sample_annotation', ann) for ann in sample_anns if
-                         nusc.get('sample_annotation', ann)['category_name'] == 'static_object.bicycle_rack']
+                         nusc.get('sample_annotation', ann)['category_name'] == '']
         bikerack_boxes = [Box(rec['translation'], rec['size'], Quaternion(rec['rotation'])) for rec in bikerack_recs]
         filtered_boxes = []
         for box in eval_boxes[sample_token]:

@@ -133,7 +133,9 @@ class DetectionEval:
             # Compute TP metrics.
             for metric_name in TP_METRICS:
                 metric_data = metric_data_list[(class_name, self.cfg.dist_th_tp)]
-                if class_name in ['traffic_cone'] and metric_name in ['attr_err', 'vel_err', 'orient_err']:
+                if class_name in ['car', 'pedestrian', 'bicycle'] and metric_name in ['attr_err', 'vel_err']:
+                    tp = np.nan
+                elif class_name in ['traffic_cone'] and metric_name in ['attr_err', 'vel_err', 'orient_err']:
                     tp = np.nan
                 elif class_name in ['barrier'] and metric_name in ['attr_err', 'vel_err']:
                     tp = np.nan
@@ -263,7 +265,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate nuScenes detection results.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--result_path', type=str, help='The submission as a JSON file.')
-    parser.add_argument('--output_dir', type=str, default='/home/thinking/detection_ws/dataset/nuscenes-tools/nuScenes_2d_tools/nuscenes-devkit/nuscenes-metrics',
+    parser.add_argument('--output_dir', type=str, default='/home/thinking/detection_ws/dataset/nuscenes-tools/nuScenes_2d_tools/nuscenes-devkit/nuscenes-metrics/detection',
                         help='Folder to store result metrics, graphs and example visualizations.')
     parser.add_argument('--eval_set', type=str, default='mini_train',
                         help='Which dataset split to evaluate on, train, val or test.')
@@ -278,7 +280,7 @@ if __name__ == "__main__":
                              'If no path given, the CVPR 2019 configuration will be used.')
     parser.add_argument('--plot_examples', type=int, default=0,
                         help='How many example visualizations to write to disk.')
-    parser.add_argument('--render_curves', type=int, default=1,
+    parser.add_argument('--render_curves', type=int, default=0,
                         help='Whether to render PR and TP curves to disk.')
     parser.add_argument('--verbose', type=int, default=1,
                         help='Whether to print to stdout.')

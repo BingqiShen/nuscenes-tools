@@ -5,11 +5,11 @@
     "bus": 50,
     "trailer": 50,
     "construction_vehicle": 50,
-    "pedestrian": 50,
+    "pedestrian": 40,
     "motorcycle": 40,
     "bicycle": 40,
-    "traffic_cone": 50,
-    "barrier": 50
+    "traffic_cone": 30,
+    "barrier": 30
   },
   "dist_fcn": "center_distance",
   "dist_ths": [0.5, 1.0, 2.0, 4.0],

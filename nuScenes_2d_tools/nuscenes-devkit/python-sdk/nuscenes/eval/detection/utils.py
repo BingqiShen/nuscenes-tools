@@ -25,7 +25,11 @@ def category_to_detection_name(category_name: str) -> Optional[str]:
         'human.pedestrian.police_officer': 'pedestrian',
         'movable_object.trafficcone': 'traffic_cone',
         'vehicle.trailer': 'trailer',
-        'vehicle.truck': 'truck'
+        'vehicle.truck': 'truck',
+        # add by sbq
+        'movable_object.pushable_pullable': 'traffic_cone',
+        'static_object.bicycle_rack': 'bicycle',
+        'human.pedestrian.personal_mobility': 'pedestrian'
     }
 
     if category_name in detection_mapping:

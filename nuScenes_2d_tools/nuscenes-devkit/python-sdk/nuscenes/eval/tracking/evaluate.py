@@ -229,12 +229,12 @@ if __name__ == "__main__":
     # Settings.
     parser = argparse.ArgumentParser(description='Evaluate nuScenes tracking results.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('result_path', type=str, help='The submission as a JSON file.')
-    parser.add_argument('--output_dir', type=str, default='~/nuscenes-metrics',
+    parser.add_argument('--result_path', type=str, help='The submission as a JSON file.')
+    parser.add_argument('--output_dir', type=str, default='/home/thinking/detection_ws/dataset/nuscenes-tools/nuScenes_2d_tools/nuscenes-devkit/nuscenes-metrics/tracking',
                         help='Folder to store result metrics, graphs and example visualizations.')
-    parser.add_argument('--eval_set', type=str, default='val',
+    parser.add_argument('--eval_set', type=str, default='mini_train',
                         help='Which dataset split to evaluate on, train, val or test.')
-    parser.add_argument('--dataroot', type=str, default='/data/sets/nuscenes',
+    parser.add_argument('--dataroot', type=str, default='/home/thinking/detection_ws/OpenPCDet/data/nuscenes/v1.0-mini',
                         help='Default nuScenes data directory.')
     parser.add_argument('--version', type=str, default='v1.0-trainval',
                         help='Which version of the nuScenes dataset to evaluate on, e.g. v1.0-trainval.')

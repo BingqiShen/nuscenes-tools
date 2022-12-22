@@ -202,6 +202,8 @@ class DetectionMetrics:
         self._label_tp_errors = defaultdict(lambda: defaultdict(float))
         self.eval_time = None
 
+        
+
     def add_label_ap(self, detection_name: str, dist_th: float, ap: float) -> None:
         self._label_aps[detection_name][dist_th] = ap
 
@@ -220,7 +222,8 @@ class DetectionMetrics:
     @property
     def mean_dist_aps(self) -> Dict[str, float]:
         """ Calculates the mean over distance thresholds for each label. """
-        return {class_name: np.mean(list(d.values())) for class_name, d in self._label_aps.items()}
+        # revise by sbq
+        return {class_name: np.mean(list(d.values())) for class_name, d in self._label_aps.items() if class_name in ['car', 'pedestrian', 'bicycle', 'traffic_cone', 'barrier']}
 
     @property
     def mean_ap(self) -> float:
@@ -234,7 +237,9 @@ class DetectionMetrics:
         for metric_name in TP_METRICS:
             class_errors = []
             for detection_name in self.cfg.class_names:
-                class_errors.append(self.get_label_tp(detection_name, metric_name))
+                # revise by sbq
+                if detection_name in ['car', 'pedestrian', 'bicycle', 'traffic_cone', 'barrier']:
+                    class_errors.append(self.get_label_tp(detection_name, metric_name))
 
             errors[metric_name] = float(np.nanmean(class_errors))
 
@@ -245,7 +250,7 @@ class DetectionMetrics:
         scores = {}
         tp_errors = self.tp_errors
         for metric_name in TP_METRICS:
-
+            
             # We convert the true positive errors to "scores" by 1-error.
             score = 1.0 - tp_errors[metric_name]
 
@@ -381,9 +386,9 @@ class DetectionBox(EvalBox):
                    ego_translation=(0.0, 0.0, 0.0) if 'ego_translation' not in content
                    else tuple(content['ego_translation']),
                    num_pts=-1 if 'num_pts' not in content else int(content['num_pts']),
-                   detection_name=content['detection_name'],
+                   detection_name=content['detection_name'] if 'detection_name' in content else content['tracking_name'],
                    detection_score=-1.0 if 'detection_score' not in content else float(content['detection_score']),
-                   attribute_name=content['attribute_name'])
+                   attribute_name="" if 'attribute_name' not in content else content['attribute_name'])
 
 
 class DetectionMetricDataList:
