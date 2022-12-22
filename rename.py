@@ -4,6 +4,8 @@ import json
 from shutil import copyfile
 import numpy as np
 import math
+import pathlib
+
 
 def quat_to_pos_matrix_hm(p_x, p_y, p_z, x, y, z, w):
     # 创建位姿矩阵，写入位置
@@ -39,7 +41,12 @@ def rotationMatrixToEulerAngles_yaw(R) :
     return z
 
 
-filenames = os.listdir('raw/2d_label/labels/CAM_FRONT')
+filenames = os.listdir('raw/2d_label/imgs/CAM_FRONT')  # 404
+# filenames = os.listdir('raw/2d_label/imgs/CAM_BACK')    # 404
+# filenames = os.listdir('raw/2d_label/imgs/CAM_FRONT_LEFT')    # 404
+# filenames = os.listdir('raw/2d_label/imgs/CAM_FRONT_RIGHT')    # 404
+# filenames = os.listdir('raw/2d_label/imgs/CAM_BACK_LEFT')    # 404
+# filenames = os.listdir('raw/2d_label/imgs/CAM_BACK_RIGHT')    # 404
 filenames.sort()
 for i in range(len(filenames)):
     # print(filenames[i])
@@ -48,10 +55,13 @@ for i in range(len(filenames)):
     _2d_label_path = os.path.join('raw/2d_label/labels/CAM_FRONT', filenames[i][:-4] + '.txt')
     _2d_img_path = os.path.join('raw/2d_label/imgs/CAM_FRONT', filenames[i][:-4] + '.jpg')
     try:
-        copyfile(_2d_label_path, 'new/2d_label/labels/CAM_FRONT/{}.txt'.format(i))
+        pathlib.Path('new/2d_label/imgs/CAM_FRONT').mkdir(parents=True, exist_ok=True)
+        pathlib.Path('new/2d_label/labels/CAM_FRONT').mkdir(parents=True, exist_ok=True)
         copyfile(_2d_img_path, 'new/2d_label/imgs/CAM_FRONT/{}.jpg'.format(i))
+        copyfile(_2d_label_path, 'new/2d_label/labels/CAM_FRONT/{}.txt'.format(i))
     except IOError as e:
         print(e)
+        open("new/2d_label/labels/CAM_FRONT/{}.txt".format(i), "w")
 
     # 2. 将2d label与3d detection, 3d pointcloud关联
     # 2d file -> time
@@ -65,15 +75,15 @@ for i in range(len(filenames)):
             if abs(int(str(_3d_timestamp)[0:11]) - int(_2d_filetime)) <= 1:
                 # print(_3d_timestamp)
                 _3d_token = load_list[j]["token"]
-                _3d_filelist = os.listdir('raw/3d_detection/VoxelNet')
-                for root, dirs, files in os.walk('raw/3d_detection/VoxelNet'):
+                _3d_filelist = os.listdir('raw/3d_detection/second')
+                for root, dirs, files in os.walk('raw/3d_detection/second'):
                     for file in files:
                         _3d_filename = str(root) + str(dirs) + str(file)
                         # token -> 3d file
                         if _3d_token in _3d_filename:
                             _3d_path = os.path.join(root, file)
                             try:
-                                copyfile(_3d_path, 'new/3d_detection/VoxelNet/bak/{}.txt'.format(i))
+                                copyfile(_3d_path, 'new/3d_detection/second/bak/{}.txt'.format(i))
                             except IOError as e:
                                 print(e)
                                 print(_3d_path)
@@ -140,19 +150,24 @@ for i in range(len(filenames)):
     T_lidar = quat_to_pos_matrix_hm(lidar_translation[0], lidar_translation[1], lidar_translation[2],
                                     lidar_rotation[1], lidar_rotation[2], lidar_rotation[3], lidar_rotation[0])
     
-    
-    T_lidar2cam = T_cam.I * T_lidar
+    T_car = quat_to_pos_matrix_hm(car_translation[0], car_translation[1], car_translation[2],
+                                  car_rotation[1], car_rotation[2], car_rotation[3], car_rotation[0])
+
+    T_lidar2cam = np.dot(T_cam.I, T_lidar)
 
 
     # 5. 写入标定txt
-    calib_file = open('new/calib/{}.txt'.format(i), 'w')
-    calib_file.write(str(cam_intrinsic) + '\n' + str(T_lidar2cam.tolist()) + '\n' + str(T_cam.tolist()) + '\n' + str(T_lidar.tolist()))
+    pathlib.Path('new/calib/CAM_FRONT').mkdir(parents=True, exist_ok=True)
+    calib_file = open('new/calib/CAM_FRONT/{}.txt'.format(i), 'w')
+    calib_file.write(str(cam_intrinsic) + '\n' + 
+                     str(T_lidar2cam.tolist()) + '\n' + 
+                     str(T_cam.tolist()) + '\n' + 
+                     str(T_lidar.tolist()) + '\n' + 
+                     str(T_car.tolist()))
     calib_file.close()
 
     # 6. 重新写入3d txt
-    T_car = quat_to_pos_matrix_hm(car_translation[0], car_translation[1], car_translation[2],
-                                  car_rotation[1], car_rotation[2], car_rotation[3], car_rotation[0])
-    with open('new/3d_detection/VoxelNet/bak/{}.txt'.format(i), 'r') as f:
+    with open('new/3d_detection/second/bak/{}.txt'.format(i), 'r') as f:
         lines = f.readlines()
     
     content_3d = ''
@@ -167,7 +182,7 @@ for i in range(len(filenames)):
         T_obj = quat_to_pos_matrix_hm(float(line[1]), float(line[2]), float(line[3]),
                                       float(line[5]), float(line[6]), float(line[7]), float(line[4]))
         
-        T_obj2lidar = T_lidar.I * T_car.I * T_obj
+        T_obj2lidar = np.dot(T_lidar.I, np.dot(T_car.I, T_obj))
 
         R_obj2lidar = T_obj2lidar[0:3, 0:3]
         yaw_obj2lidar = rotationMatrixToEulerAngles_yaw(R_obj2lidar)
@@ -182,7 +197,7 @@ for i in range(len(filenames)):
     # 最后一行加3d token
     content_3d = content_3d + _3d_token
 
-    _3d_file = open('new/3d_detection/VoxelNet/train/{}.txt'.format(i), 'w')
+    _3d_file = open('new/3d_detection/second/train/{}.txt'.format(i), 'w')
     _3d_file.write(content_3d)
     _3d_file.close()
     

@@ -4,9 +4,10 @@ import os
 car_list = ['car', 'bus', 'truck', 'construction_vehicle', 'trailer', 'emergency']
 pedestrian_list = ['pedestrian']
 bicycle_list = ['bicycle', 'motorcycle']
-moveable_object_list = ['traffic_cone', 'barrier', 'moveable_object', 'movable_object']
+traffic_cone_list = ['traffic_cone', 'movable_object', 'animal']
+barrier_list = ['barrier', 'debris']
 
-detection_path = 'new/3d_detection/VoxelNet/train'
+detection_path = 'new/3d_detection/second/train'
 filenames = os.listdir(detection_path)
 filenames.sort()
 
@@ -37,8 +38,10 @@ for i in range(len(filenames)):
             content_3d[j][0] = 'pedestrian'
         elif content_3d[j][0] in bicycle_list:
             content_3d[j][0] = 'bicycle'
-        elif content_3d[j][0] in moveable_object_list:
-            content_3d[j][0] = 'movable_object'
+        elif content_3d[j][0] in traffic_cone_list:
+            content_3d[j][0] = 'traffic_cone'
+        elif content_3d[j][0] in barrier_list:
+            content_3d[j][0] = 'barrier'
         else:
             print(content_3d[j][0])
         
@@ -50,7 +53,7 @@ for i in range(len(filenames)):
     # 把最后一行token加上
     new_content = new_content + str(content_3d[-1][0])
 
-    _3d_file = open('new/3d_detection/VoxelNet/new/{}.txt'.format(filenames[i][:-4]), 'w')
+    _3d_file = open('new/3d_detection/second/new/{}.txt'.format(filenames[i][:-4]), 'w')
     _3d_file.write(new_content)
     _3d_file.close()
 
